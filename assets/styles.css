@@ -1,0 +1,26 @@
+@import '../vendor/twbs/bootstrap/dist/css/bootstrap.min.css';
+
+.register-form {
+  max-width: 750px;
+  background-color: hsl(30, 14%, 95%);
+}
+.users-table {
+  max-width:1500px;
+}
+.users-table strong {
+  height:50px;
+}
+
+.users-table input {
+  width: 200px;
+}
+.users-table td {
+  padding-top: 14px;
+}
+.vh-75 {
+  height: 75vh;
+}
+
+main > .container {
+  padding: 60px 15px 0;
+}
