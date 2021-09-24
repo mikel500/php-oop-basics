@@ -19,7 +19,7 @@
           <?php foreach ($users as $key => $user) : ?>
             <tr>
               <td><strong class="d-flex align-items-center"><?= $user["id"] ?></strong></td>
-              <form id="user_form_<?= $key ?>" action="<?= base_url ?>user/putUser" method="POST">
+              <form id="user_form_<?= $key ?>" action="<?= base_url ?>user/putUser" method="POST" enctype="multipart/form-data">
                 <td>
                   <input class="form-control" type="text" name="name" value=<?= $user["name"] ?>>
                 </td>
@@ -30,7 +30,7 @@
                 <td>
                   <label class="btn btn-primary">
                     <img style="width:18px;" src=" assets/img/upload.svg" alt="Añadir Archivo">
-                    <input type="file" style="display:none;" value=<?= $user["image"] ?>>
+                    <input type="file" style="display:none;" name="image" value=<?= $user["image"] ?>>
                   </label>
                 </td>
               </form>
