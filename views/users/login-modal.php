@@ -6,19 +6,18 @@
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                <form id="login" method="post" action="<?= base_url ?>user/login">
-                    <div class="mb-3">
-                        <label for="email" class="form-label">Email</label>
-                        <input type="email" class="form-control" id="email" name="email">
-                    </div>
-                    <div class="mb-3">
-                        <label for="password" class="form-label">Contraseña</label>
-                        <input type="password" class="form-control" id="password" name="password">
-                    </div>
-                </form>
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" class="form-control" id="email" name="email" placeholder="Introduzca su correo electrónico">
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Contraseña</label>
+                    <input type="password" class="form-control" id="password" name="password" placeholder="********">
+                </div>
+                <p id="login-error" class="text-center text-danger mt-2"></p>
             </div>
             <div class="modal-footer">
-                <button type="submit" class="btn btn-primary" form="login" value="Submit">Entrar</button>
+                <button type="button" id="login-button" class="btn btn-primary">Entrar</button>
             </div>
         </div>
     </div>

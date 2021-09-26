@@ -1,8 +1,15 @@
 <?php
+session_start();
+ob_start();
+
 require_once 'config/parameters.php';
-require_once 'views/layout/head.php';
-require_once 'views/layout/header.php';
-require_once 'views/users/login-modal.php';
+
+
+if (!isset($_POST["login"])) {    
+    require_once 'views/layout/head.php';
+    require_once 'views/layout/header.php';
+}
+
 require_once 'autoload.php';
 
 if (isset($_GET['controller'])) {
@@ -34,6 +41,8 @@ if (class_exists($controller_name)) {
     $error->showError();
     exit();
 }
-
+if (!isset($_POST["login"])) {
 require_once 'views/layout/footer.php';
-session_destroy();
+}
+ob_end_flush();
+
