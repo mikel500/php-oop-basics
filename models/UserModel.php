@@ -1,6 +1,8 @@
 <?php
 require_once 'config/db.php';
 require_once 'services/passwordValidationService.php';
+require_once 'services/mailValidationService.php';
+
 
 class User
 {
@@ -55,22 +57,37 @@ class User
 
   function setName($name)
   {
-    $this->name = $name;
+    if (strlen($name) <= 100) {
+      $this->name = $name;
+    } else {
+      throw new Exception("Introduzca un nombre válido.");
+    }
   }
 
   function setSurname($surname)
   {
-    $this->surname = $surname;
+    if (strlen($surname) <= 100) {
+      $this->surname = $surname;
+    } else {
+      throw new Exception("Introduzca un apellido válido.");
+    }
   }
   function setEmail($email)
   {
-    $this->email = $email;
+    if (strlen($email) <= 100) {
+      $validEmail = validateEmail($email);
+      if ($validEmail) {
+        $this->email = $email;
+      }
+    }
   }
   function setPassword(string $password)
   {
-    $validPassword = validatePassword($password);
-    if ($validPassword) {
-      $this->password = password_hash($password, PASSWORD_BCRYPT);
+    if (strlen($password) <= 75) {
+      $validPassword = validatePassword($password);
+      if ($validPassword) {
+        $this->password = password_hash($password, PASSWORD_BCRYPT);
+      }
     }
   }
   function setRol($rol)
@@ -78,7 +95,7 @@ class User
     if ($rol === 'admin' || $rol === 'user') {
       $this->rol = $rol;
     } else {
-      $this->rol = null;
+      $this->rol = 'user';
     }
   }
   function setImage($image)
@@ -91,17 +108,12 @@ class User
   }
   function newUser()
   {
-    $sql = "INSERT INTO users VALUES(
-            NULL,
-            '$this->name',
-            '$this->surname',
-            '$this->email',
-            '$this->password',
-            '$this->rol',
-            '$this->image'
-        )";
     $db = DataBase::connect();
-    $result = $db->query($sql);
+    $query = $db->prepare("INSERT INTO users VALUES (?,?,?,?,?,?,?)");
+    $query->bind_param('sssssss', $id, $this->name, $this->surname, $this->email, $this->password, $this->rol, $this->image);
+    $id = null;
+    $result = $query->execute();
+    $db->close();
     return $result;
   }
 
@@ -112,10 +124,11 @@ class User
       $query = $db->prepare("UPDATE users SET name=?, surname=?,email=?,password=?,rol=?, image=? WHERE id=?");
       $query->bind_param('ssssssi', $this->name, $this->surname, $this->email, $this->password, $this->rol, $this->image, $id);
       $query->execute();
-      if ($query->affected_rows === 0) {
+      $affectedRows = $query->affected_rows;
+      $db->close();
+      if ($affectedRows === 0) {
         return false;
       } else {
-
         return true;
       }
     }
@@ -129,7 +142,9 @@ class User
       $query = $db->prepare("DELETE FROM users WHERE id = ?");
       $query->bind_param('i', $id);
       $query->execute();
-      if ($query->affected_rows === 0) {
+      $affectedRows = $query->affected_rows;
+      $db->close();
+      if ($affectedRows === 0) {
         return false;
       } else {
         return true;
@@ -142,9 +157,31 @@ class User
     $db = DataBase::connect();
     $sql = "SELECT * FROM users";
     $result = $db->query($sql);
+    $db->close();
     return $result;
   }
-  static function login(){
-    //pendiente
+  static function login($password, $email)
+  {
+    $validPassword = validatePassword($password);
+    $validEmail = validateEmail($email);
+    
+    if ($validPassword && $validEmail) {
+      $db = DataBase::connect();
+      $query = $db->prepare("SELECT password,rol FROM users WHERE email=?");
+      $query->bind_param('s', $validEmail);
+      $query->execute();
+      $result = $query->get_result();
+      if(!$result->num_rows){
+        return false;
+      }
+      $user = $result->fetch_assoc();
+      $userPassword = $user["password"];
+      if(password_verify($password, $userPassword)){
+        return $user["rol"];
+      } else {
+        return false;
+      }
+      $db->close();
+    }
   }
 }
