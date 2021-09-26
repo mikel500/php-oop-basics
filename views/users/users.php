@@ -61,10 +61,10 @@
       </table>
     </div>
     <?php if (isset($_SESSION["success_msg"])) : ?>
-      <p class="text-success fs-5"><?= $_SESSION["success_msg"] ?></p>
+      <p class="text-success fs-5 text-center"><?= $_SESSION["success_msg"] ?></p>
     <?php endif; ?>
     <?php if (isset($_SESSION["error_msg"])) : ?>
-      <p class="text-danger fs-5"><?= $_SESSION["error_msg"] ?></p>
+      <p class="text-danger fs-5 text-center"><?= $_SESSION["error_msg"] ?></p>
     <?php endif; ?>
   </div>
 </section>
