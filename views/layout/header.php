@@ -10,7 +10,7 @@
         </button>
 
         <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
-          <ul class="navbar-nav">
+          <ul class="navbar-nav px-1">
             <li class="nav-item">
               <a class="nav-link" href="#">Link</a>
             </li>
@@ -30,9 +30,37 @@
               <a class="nav-link" href="#">Link</a>
             </li>
           </ul>
-          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#login-modal">Login</button>
+          <?php if (!isset($_SESSION["login"])) : ?>
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#login-modal">Entrar</button>
+            <a class="btn btn-success ms-2" href="user/register">Registrarse</a>
+          <?php else : ?>
+            <div class="dropdown">
+              <button class="btn btn-outline-light dropdown-toggle p-0" type="button" data-bs-toggle="dropdown">
+                <img src="assets/img/user.svg" style="width:32px">
+              </button>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#">Perfil</a></li>
+                <?php if ($_SESSION["login"] === 'user') : ?>
+                  <li><a class="dropdown-item" href="#">Mis pedidos</a></li>
+                <?php else : ?>
+                  <li><a class="dropdown-item" href="user/getUsers">Usuarios</a></li>
+                  <li><a class="dropdown-item" href="#">Productos</a></li>
+                <?php endif; ?>
+                <li>
+                  <form id="logout" action="<?= base_url ?>user/logout" method="POST">
+                    <button class="dropdown-item" href="#">Salir</a>
+                  </form>
+                </li>
+              </ul>
+            </div>
+          <?php endif; ?>
         </div>
       </nav>
     </div>
   </header>
   <main class="flex-shrink-0">
+    <?php
+    if (!isset($_SESSION["rol"])) :
+      require_once 'views/users/login-modal.php';
+    endif;
+    ?>
