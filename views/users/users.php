@@ -12,7 +12,7 @@
             <th>Email</th>
             <th>Rol</th>
             <th>Imagen</th>
-            <th class="text-center">Editar</th>
+            <th>Editar</th>
           </tr>
         </thead>
         <tbody>
@@ -26,7 +26,16 @@
                 <td><input class="form-control" type="text" name="surname" value=<?= $user["surname"] ?>></td>
                 <td><input class="form-control" type="password" name="password" value=<?= $user["password"] ?>></td>
                 <td><input class="form-control" type="email" name="email" value=<?= $user["email"] ?>></td>
-                <td><input class="form-control" type="rol" name="rol" value=<?= $user["rol"] ?>></td>
+                <td>
+                  <select class="form-select" name="rol">
+                    <option selected value=<?= $user["rol"] ?>><?= $user["rol"] ?></option>
+                    <?php if ($user["rol"] === 'user') : ?>
+                      <option value="admin">admin</option>
+                    <?php else : ?>
+                      <option value="user">user</option>
+                    <?php endif; ?>
+                  </select>
+                </td>
                 <td>
                   <label class="btn btn-primary">
                     <img style="width:18px;" src=" assets/img/upload.svg" alt="Añadir Archivo">
@@ -59,3 +68,7 @@
     <?php endif; ?>
   </div>
 </section>
+<?php
+unset($_SESSION["success_msg"]);
+unset($_SESSION["error_msg"]);
+?>
